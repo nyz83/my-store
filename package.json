@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ionic/react": "^7.7.2",
     "mysql2": "^3.9.1",
     "next": "14.1.0",
     "react": "^18",
