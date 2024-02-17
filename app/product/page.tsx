@@ -33,6 +33,14 @@ export default function ProductPage() {
     });
   };
 
+  const handleView = (item: any) => {
+    window.location.href = '/product/view/' + item?.id;
+  };
+
+  const handleEdit = (item: any) => {
+    window.location.href = '/product/edit/' + item?.id;
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -47,6 +55,8 @@ export default function ProductPage() {
             <p>{item.name}</p>
             <IonToolbar>
               <IonButtons slot='end'>
+                <IonButton onClick={() => handleView(item)} fill='outline'>View</IonButton>
+                <IonButton onClick={() => handleEdit(item)} fill='outline'>Edit</IonButton>
                 <IonButton
                   className='px-4 py-2 '
                   onClick={() => handleDelete(item)}>
