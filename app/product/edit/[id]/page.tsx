@@ -17,8 +17,14 @@ import {
 } from '@ionic/react';
 
 export default function Page() {
-  const { id } = useParams();
+  const [isClient, setIsClient] = useState<boolean>(false);
   const [product, setProduct] = useState<any>(null);
+
+  const nameRef = useRef<HTMLIonInputElement>(null);
+  const sellPriceRef = useRef<HTMLIonInputElement>(null);
+  const buyPriceRef = useRef<HTMLIonInputElement>(null);
+
+  const { id } = useParams();
 
   const getProduct = () => {
     axios.get('/product/api/' + id).then((res) => {
@@ -26,15 +32,6 @@ export default function Page() {
       setProduct(res.data[0]);
     });
   };
-
-  const nameRef = useRef<HTMLIonInputElement>(null);
-  const sellPriceRef = useRef<HTMLIonInputElement>(null);
-  const buyPriceRef = useRef<HTMLIonInputElement>(null);
-
-  useEffect(() => {
-    getProduct();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleSave = async () => {
     const formData = new FormData();
@@ -49,50 +46,60 @@ export default function Page() {
     });
   };
 
+  useEffect(() => {
+    getProduct();
+    setIsClient(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <div>
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Edit Page</IonTitle>
-            <IonButtons slot='end'>
-              <IonButton
-                expand='block'
-                onClick={() => handleSave()}>Save</IonButton>
-            </IonButtons>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <IonItem>
-            <IonInput
-              value={product?.name}
-              placeholder='Name'
-              ref={nameRef}
-              labelPlacement='fixed'
-              label='Name'
-            />
-          </IonItem>
-          <IonItem>
-            <IonInput
-              value={product?.buy_price}
-              placeholder='Buy Price'
-              ref={buyPriceRef}
-              labelPlacement='floating'
-              label='Buy Price'
-            />
-          </IonItem>
-          <IonItem>
-            <IonInput
-              value={product?.sell_price}
-              placeholder='Sell Price'
-              ref={sellPriceRef}
-              labelPlacement='stacked'
-              label='Sell Price'
-            />
-          </IonItem>
-        </IonContent>
-        <IonFooter></IonFooter>
-      </IonPage>
-    </div>
+    <>
+      {isClient && (
+        <IonPage>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Edit Page</IonTitle>
+              <IonButtons slot='end'>
+                <IonButton
+                  expand='block'
+                  onClick={() => handleSave()}>
+                  Save
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            <IonItem>
+              <IonInput
+                value={product?.name}
+                placeholder='Name'
+                ref={nameRef}
+                labelPlacement='fixed'
+                label='Name'
+              />
+            </IonItem>
+            <IonItem>
+              <IonInput
+                value={product?.buy_price}
+                placeholder='Buy Price'
+                ref={buyPriceRef}
+                labelPlacement='floating'
+                label='Buy Price'
+              />
+            </IonItem>
+            <IonItem>
+              <IonInput
+                value={product?.sell_price}
+                placeholder='Sell Price'
+                ref={sellPriceRef}
+                labelPlacement='stacked'
+                label='Sell Price'
+              />
+            </IonItem>
+          </IonContent>
+          <IonFooter></IonFooter>
+        </IonPage>
+      )}
+    </>
   );
 }

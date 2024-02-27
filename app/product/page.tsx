@@ -13,12 +13,9 @@ import {
   IonToolbar,
 } from '@ionic/react';
 
-export default function ProductPage() {
+export default function Page() {
+  const [isClient, setIsClient] = useState<boolean>(false);
   const [products, setProducts] = useState<any>([]);
-
-  useEffect(() => {
-    getProducts();
-  }, []);
 
   const getProducts = () => {
     axios.get('/product/api').then((res) => {
@@ -41,32 +38,48 @@ export default function ProductPage() {
     window.location.href = '/product/edit/' + item?.id;
   };
 
-  return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Product List</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+  useEffect(() => {
+    getProducts();
+    setIsClient(true);
+  }, []);
 
-      <IonContent>
-        {products.map((item: any) => (
-          <IonItem key={item.id}>
-            <p>{item.name}</p>
+  return (
+    <>
+      {isClient && (
+        <IonPage>
+          <IonHeader>
             <IonToolbar>
-              <IonButtons slot='end'>
-                <IonButton onClick={() => handleView(item)} fill='outline'>View</IonButton>
-                <IonButton onClick={() => handleEdit(item)} fill='outline'>Edit</IonButton>
-                <IonButton
-                  className='px-4 py-2 '
-                  onClick={() => handleDelete(item)}>
-                  Delete
-                </IonButton>
-              </IonButtons>
+              <IonTitle>Product List</IonTitle>
             </IonToolbar>
-          </IonItem>
-        ))}
-      </IonContent>
-    </IonPage>
+          </IonHeader>
+          <IonContent>
+            {products.map((item: any) => (
+              <IonItem key={item.id}>
+                <p>{item.name}</p>
+                <IonToolbar>
+                  <IonButtons slot='end'>
+                    <IonButton
+                      onClick={() => handleView(item)}
+                      fill='outline'>
+                      View
+                    </IonButton>
+                    <IonButton
+                      onClick={() => handleEdit(item)}
+                      fill='outline'>
+                      Edit
+                    </IonButton>
+                    <IonButton
+                      className='px-4 py-2 '
+                      onClick={() => handleDelete(item)}>
+                      Delete
+                    </IonButton>
+                  </IonButtons>
+                </IonToolbar>
+              </IonItem>
+            ))}
+          </IonContent>
+        </IonPage>
+      )}
+    </>
   );
 }
